@@ -13,7 +13,7 @@ From a technical perspective, this work fine-tunes a resnet18 (initially trained
 classes of waste.
 
 
-The data we use for this task is adapted from two sources,https://www.kaggle.com/techsash/waste-classification-data and https://www.kaggle.com/asdasdasasdas/garbage-classification.
+The data we use for this task is adapted from two sources, https://www.kaggle.com/techsash/waste-classification-data and https://www.kaggle.com/asdasdasasdas/garbage-classification.
 
 These data streams give us roughly a training-validation-testing split of 300-80-80 images per class, which are:
 
@@ -73,3 +73,9 @@ $ imagenet.py --model=models/waste-classification/resnet18.onnx --input_blob=inp
 
 
 Just open the stream from your desired RTP, and voila! Look at all that trash!
+
+
+# Next Steps
+
+For more detail on this project, please check out https://nkasmanoff.github.io/blog.html, where at the end I point out a few ideas to extend
+the use-cases of a model like this.
