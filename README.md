@@ -1,19 +1,37 @@
 # waste-classification
 
 
-Instantiates a classifier for real time object detection of garbage, identifying what
+Instantiates a classifier for real time object detection of waste, identifying what
 bin it should be in.
 
-
 This work depends on the UI tools created as part of the Jetson Hello AI World Tutorial
-found at https://github.com/dusty-nv/jetson-inference.
+found at https://github.com/dusty-nv/jetson-inference. This work assumes familarity with at least the first 3 episodes
+of that tutorial, as we will be taking advantage of that format for training to inference procedure.
 
 
-We will be using a resnet18 fine-tuned on the dataset provided, of 7 unique
-categories of waste.
+From a technical perspective, this work fine-tunes a resnet18 (initially trained on ImageNet), to categorize 7 unique
+classes of waste.
 
 
-To reproduce this work, I am assuming you already have in your posession a Jetson
+The data we use for this task is adapted from two sources,https://www.kaggle.com/techsash/waste-classification-data and https://www.kaggle.com/asdasdasasdas/garbage-classification.
+
+These data streams give us roughly a training-validation-testing split of 300-80-80 images per class, which are:
+
+        - cardboard
+        - glass
+        - metal
+        - organic
+        - paper
+        - plastic
+        - trash
+
+Understandably, having 7 different waste bins might be a little excessive, so it is certainly feasible to pool together some of these categories.
+I will leave that to a future work, since having more classes at least to start is not a bad thing!
+
+
+
+
+To reproduce this work, I am assuming you already have in your possession a Jetson
 flashed with the Jetpack OS, and a camera which you can attach to that device.
 
 Once that is all configured, ssh into your device, and replicate the following steps:
@@ -29,14 +47,14 @@ Once that is all configured, ssh into your device, and replicate the following s
 
 With these actions complete, all that's left is to train your model.
 
-This is how the model I used:
+This an example command which leaves all hyper-parameters fixed, except the max # of epochs to train for.
 
 ```bash
 $ python3 src/train.py --model-dir=models/waste-classification --epochs=250 /waste-classification/data/waste-classification
 ```
 
-There are many additional arguments within this file, but I found that leaving these settings as is led to satisfactory performance
-after letting this job run for roughly X hours.
+There are many additional arguments within train.py, but I found that leaving these settings as is led to satisfactory performance
+after letting this job run for roughly 4 hours.
 
 In total, the best saved model (models/...) achieved a test set accuracy of Y%. We next export this model to onnx to allow for a faster and more flexible runtime.
 
