@@ -19,7 +19,15 @@ flashed with the Jetpack OS, and a camera which you can attach to that device.
 Once that is all configured, ssh into your device, and replicate the following steps:
 
 
+| Step | Description | Relative Path | Command |
+| :---: | --- | :---: | :---: |
+| 1 | Clone this repository | /home/<your-name> | git clone https://github.com/nkasmanoff/waste-classification.git  |
+| 2 | Clone the jetson-inference library | /home/<your-name> | git clone --recursive https://github.com/dusty-nv/jetson-inference |
+| 3 | Build the jetson-inference container, download appropriate models | /home/<your-name>/waste-classification | chmod +777 docker/setup.sh & docker/setup.sh
+| 4 | Head to the newly built waste-classification repo | /waste-classification | cd /waste-classification/
 
+
+With these actions complete, all that's left is
 
 
 To get started here, you will need to clone this repo, along with jetson-inference, to the same repo level.
