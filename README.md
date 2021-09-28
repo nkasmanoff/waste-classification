@@ -27,47 +27,31 @@ Once that is all configured, ssh into your device, and replicate the following s
 | 4 | Head to the newly built waste-classification repo | /waste-classification | cd /waste-classification/
 
 
-With these actions complete, all that's left is
+With these actions complete, all that's left is to train your model.
 
+This is how the model I used:
 
-To get started here, you will need to clone this repo, along with jetson-inference, to the same repo level.
+```bash
+$ python3 src/train.py --model-dir=models/waste-classification --epochs=250 /waste-classification/data/waste-classification
+```
 
+There are many additional arguments within this file, but I found that leaving these settings as is led to satisfactory performance
+after letting this job run for roughly X hours.
 
-git clone X
+In total, the best saved model (models/...) achieved a test set accuracy of Y%. We next export this model to onnx to allow for a faster and more flexible runtime.
 
-git clone X
-
-cd waste-classification
-
-docker/setup.sh
-
-
-
-And you can either download the model from HERE,
-
-or train your own with the adapted commands
-
-python3 train.py ...
-
-t
-python3 src/train.py --model-dir=models/waste-classification --epochs=250 /waste-classification/data/waste-classification
-
-Next take this best model and convert it to onnx format such that it may allow for fast (and flexible) real time inference
-
-
-python3 src/onnx_export.py --model-dir=models/waste-classification
-
-To resume from a checkpoint
-
-python3 src/train.py --model-dir=models
-/waste-classification --resume=models/waste-classification/checkpoint.pth.tar --epochs=200 data/waste-classification
+This can be accomplished with the following code.
+```bash
+$ python3 src/onnx_export.py --model-dir=models/waste-classification
+```
 
 
 
+And finally we integrate this model with a real-time streaming tool, say, right in front of your kitchen garbage bin, this can be accomplished with the following command line argument made possible by building this repo out of jetson-inference.
 
-And to integrate this model with a real time streaming option, in the kitchen for instance, with the command (I am streaming with a CSI camera)
-
-imagenet.py --model=models/waste-classification/resnet18.onnx --input_blob=input_0 --output_blob=output_0 --labels=data/garbage_classification/labels.txt csi://0  --input-codec=h264 rtp://192.168.1.93:1234
+```bash
+$ imagenet.py --model=models/waste-classification/resnet18.onnx --input_blob=input_0 --output_blob=output_0 --labels=data/garbage_classification/labels.txt csi://0  --input-codec=h264 rtp://192.168.1.93:1234
+```
 
 
 Just open the stream from your desired RTP, and voila! Look at all that trash!
