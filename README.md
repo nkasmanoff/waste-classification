@@ -54,9 +54,9 @@ $ python3 src/train.py --model-dir=models/waste-classification --epochs=250 /was
 ```
 
 There are many additional arguments within train.py, but I found that leaving these settings as is led to satisfactory performance
-after letting this job run for roughly 4 hours.
+after letting this job run for roughly 8 hours.
 
-In total, the best saved model (models/...) achieved a test set accuracy of Y%. We next export this model to onnx to allow for a faster and more flexible runtime.
+We next export this model to onnx to allow for a faster and more flexible runtime.
 
 This can be accomplished with the following code.
 ```bash
@@ -68,7 +68,7 @@ $ python3 src/onnx_export.py --model-dir=models/waste-classification
 And finally we integrate this model with a real-time streaming tool, say, right in front of your kitchen garbage bin, this can be accomplished with the following command line argument made possible by building this repo out of jetson-inference.
 
 ```bash
-$ imagenet.py --model=models/waste-classification/resnet18.onnx --input_blob=input_0 --output_blob=output_0 --labels=data/garbage_classification/labels.txt csi://0  --input-codec=h264 rtp://<YOUR IP ADDRESS>:1234
+$ imagenet.py --model=models/waste-classification/resnet18.onnx --input_blob=input_0 --output_blob=output_0 --labels=data/waste-classification/labels.txt csi://0  --input-codec=h264 rtp://<YOUR IP ADDRESS>:1234
 ```
 
 
