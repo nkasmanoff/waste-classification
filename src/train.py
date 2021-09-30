@@ -11,6 +11,8 @@ import random
 import shutil
 import time
 import warnings
+import wandb # TODO - add loss, val acc.
+wandb.login()
 
 import torch
 import torch.nn as nn
@@ -100,7 +102,14 @@ best_acc1 = 0
 # initiate worker threads (if using distributed multi-GPU)
 #
 def main():
+
+    # instantiate run
+    run = wandb.init(project="waste-classification") # team log
+
     args = parser.parse_args()
+
+    # add args to wandb
+    wandb.config.update(args)
 
     if args.seed is not None:
         random.seed(args.seed)
@@ -268,6 +277,9 @@ def main_worker(gpu, ngpus_per_node, args):
         validate(val_loader, model, criterion, num_classes, args)
         return
 
+
+    wandb.watch(model,criterion, log='all',log_freq = 10)
+
     # train for the specified number of epochs
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
@@ -339,6 +351,7 @@ def train(train_loader, model, criterion, optimizer, epoch, num_classes, args):
         top1.update(acc1[0], images.size(0))
         top5.update(acc5[0], images.size(0))
 
+        # todo - log here
         # compute gradient and do SGD step
         optimizer.zero_grad()
         loss.backward()
@@ -350,6 +363,11 @@ def train(train_loader, model, criterion, optimizer, epoch, num_classes, args):
 
         if i % args.print_freq == 0:
             progress.display(i)
+
+    wandb.log({'train_loss':losses})
+    wandb.log({'train_top1_acc':top1})
+    wandb.log({'train_top5_acc':top5})
+
 
     print("Epoch: [{:d}] completed, elapsed time {:6.3f} seconds".format(epoch, time.time() - epoch_start))
 
@@ -397,6 +415,10 @@ def validate(val_loader, model, criterion, num_classes, args):
         # TODO: this should also be done with the ProgressMeter
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
               .format(top1=top1, top5=top5))
+
+    wandb.log({"valid loss": losses})
+    wandb.log({"valid top1 acc": top1})
+    wandb.log({"valid top5 acc": top5})
 
     return top1.avg
 
