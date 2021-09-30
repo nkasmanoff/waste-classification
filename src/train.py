@@ -363,11 +363,11 @@ def train(train_loader, model, criterion, optimizer, epoch, num_classes, args):
 
         if i % args.print_freq == 0:
             progress.display(i)
-    print('losses = ', losses)
+    print('losses = ', losses.avg)
     print('top1 = ', top1 )
-    wandb.log({'train_loss': float(losses)})
-    wandb.log({'train_top1_acc': float(top1)})
-    wandb.log({'train_top5_acc':float(top5)})
+    wandb.log({'train_loss': float(losses.avg)})
+    wandb.log({'train_top1_acc': float(top1.avg)})
+    wandb.log({'train_top5_acc':float(top5.avg)})
 
 
     print("Epoch: [{:d}] completed, elapsed time {:6.3f} seconds".format(epoch, time.time() - epoch_start))
@@ -417,9 +417,9 @@ def validate(val_loader, model, criterion, num_classes, args):
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
               .format(top1=top1, top5=top5))
 
-    wandb.log({"valid loss": float(losses)})
-    wandb.log({"valid top1 acc": float(top1)})
-    wandb.log({"valid top5 acc": float(top5)})
+    wandb.log({"valid loss": float(losses.avg)})
+    wandb.log({"valid top1 acc": float(top1.avg)})
+    wandb.log({"valid top5 acc": float(top5.avg)})
 
     return top1.avg
 
