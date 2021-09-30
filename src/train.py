@@ -363,8 +363,8 @@ def train(train_loader, model, criterion, optimizer, epoch, num_classes, args):
 
         if i % args.print_freq == 0:
             progress.display(i)
-    print('losses = ', losses.avg)
-    print('top1 = ', top1 )
+
+
     wandb.log({'train_loss': float(losses.avg)})
     wandb.log({'train_top1_acc': float(top1.avg)})
     wandb.log({'train_top5_acc':float(top5.avg)})
