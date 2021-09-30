@@ -158,7 +158,7 @@ def main_worker(gpu, ngpus_per_node, args):
     # data loading code
     traindir = os.path.join(args.data, 'train')
     valdir = os.path.join(args.data, 'val')
-    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], # mean and std of imagenet
                                      std=[0.229, 0.224, 0.225])
 
     train_dataset = datasets.ImageFolder(
@@ -166,7 +166,10 @@ def main_worker(gpu, ngpus_per_node, args):
         transforms.Compose([
             #transforms.Resize(224),
             transforms.RandomResizedCrop(args.resolution),
+            transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.2),
+            transforms.RandomPerspective(),
             transforms.RandomHorizontalFlip(),
+            transforms.RandomRotation(degrees=30),
             transforms.ToTensor(),
             normalize,
         ]))
