@@ -415,10 +415,11 @@ def validate(val_loader, model, criterion, num_classes, args):
         # TODO: this should also be done with the ProgressMeter
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
               .format(top1=top1, top5=top5))
-
-    wandb.log({"valid loss": losses})
-    wandb.log({"valid top1 acc": top1})
-    wandb.log({"valid top5 acc": top5})
+    print('losses = ', losses)
+    print('top1 = ', top1 )
+    wandb.log({"valid loss": float(losses))})
+    wandb.log({"valid top1 acc": float(top1)})
+    wandb.log({"valid top5 acc": float(top5)})
 
     return top1.avg
 
