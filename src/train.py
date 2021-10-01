@@ -262,7 +262,7 @@ def main_worker(gpu, ngpus_per_node, args):
     # define loss function (criterion) and optimizer
     criterion = nn.CrossEntropyLoss().cuda(args.gpu)
 
-    optimizer = torch.optim.SGD(model.parameters(), args.lr,
+    optimizer = torch.optim.Adam(model.parameters(), args.lr,
                                 momentum=args.momentum,
                                 weight_decay=args.weight_decay)
 
@@ -439,7 +439,7 @@ def validate(val_loader, model, criterion, num_classes, args):
 
 
 def test(test_loader, model, checkpoint, criterion, num_classes, args):
-    
+
     """
     Following training and validation take best model, and run on test set.
     """
