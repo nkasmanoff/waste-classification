@@ -167,6 +167,7 @@ def main_worker(gpu, ngpus_per_node, args):
     # data loading code
     traindir = os.path.join(args.data, 'train')
     valdir = os.path.join(args.data, 'val')
+    testdir = os.path.join(args.data, 'test')
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], # mean and std of imagenet
                                      std=[0.229, 0.224, 0.225])
 
@@ -204,6 +205,18 @@ def main_worker(gpu, ngpus_per_node, args):
         ])),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
+
+
+    test_loader = torch.utils.data.DataLoader(
+        datasets.ImageFolder(testdir, transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(args.resolution),
+            transforms.ToTensor(),
+            normalize,
+        ])),
+        batch_size=args.batch_size, shuffle=False,
+        num_workers=args.workers, pin_memory=True)
+
 
     # create or load the model if using pre-trained (the default)
     if args.pretrained:
@@ -310,6 +323,7 @@ def main_worker(gpu, ngpus_per_node, args):
                 'optimizer' : optimizer.state_dict(),
             }, is_best, args)
 
+    test(test_loader, model, criterion, num_classes, args)
 
 #
 # train one epoch
@@ -422,6 +436,69 @@ def validate(val_loader, model, criterion, num_classes, args):
     wandb.log({"valid top5 acc": float(top5.avg)})
 
     return top1.avg
+
+
+def test(test_loader, model, checkpoint, criterion, num_classes, args):
+    
+    """
+    Following training and validation take best model, and run on test set.
+    """
+
+    batch_time = AverageMeter('Time', ':6.3f')
+    losses = AverageMeter('Loss', ':.4e')
+    top1 = AverageMeter('Acc@1', ':6.2f')
+    top5 = AverageMeter('Acc@5', ':6.2f')
+    progress = ProgressMeter(
+        len(test_loader),
+        [batch_time, losses, top1, top5],
+        prefix='Test: ')
+    if args.model_dir:
+        model_path = os.path.expanduser(args.model_dir)
+        best_filename = os.path.join(model_path, best_filename)
+        best_checkpoint = torch.load(best_checkpoint)
+
+    else:
+        return "Please make sure model dir is set! Exiting test."
+
+    model.load_state_dict(checkpoint['state_dict'])
+
+    # switch to evaluate mode
+    model.eval()
+
+    with torch.no_grad():
+        end = time.time()
+        for i, (images, target) in enumerate(test_loader):
+            if args.gpu is not None:
+                images = images.cuda(args.gpu, non_blocking=True)
+                target = target.cuda(args.gpu, non_blocking=True)
+
+            # compute output
+            output = model(images)
+            loss = criterion(output, target)
+
+            # measure accuracy and record loss
+            acc1, acc5 = accuracy(output, target, topk=(1, min(5, num_classes)))
+            losses.update(loss.item(), images.size(0))
+            top1.update(acc1[0], images.size(0))
+            top5.update(acc5[0], images.size(0))
+
+            # measure elapsed time
+            batch_time.update(time.time() - end)
+            end = time.time()
+
+            if i % args.print_freq == 0:
+                progress.display(i)
+
+        # TODO: this should also be done with the ProgressMeter
+        print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
+              .format(top1=top1, top5=top5))
+
+    wandb.log({"test loss": float(losses.avg)})
+    wandb.log({"test top1 acc": float(top1.avg)})
+    wandb.log({"test top5 acc": float(top5.avg)})
+
+    return top1.avg
+
 
 
 #
