@@ -53,8 +53,7 @@ This an example command which leaves all hyper-parameters fixed, except the max 
 $ python3 src/train.py --model-dir=models/waste-classification --epochs=250 /waste-classification/data/waste-classification
 ```
 
-There are many additional arguments within train.py, but I found that leaving these settings as is led to satisfactory performance
-after letting this job run for roughly 8 hours.
+There are many additional arguments within train.py, but I found that leaving these settings as is led to test set top1 accuracy of ~63% and top5 accuracy of ~98%  after letting this job run for roughly 24 hours. I tried several ways to speed this performance up, but none seemed to help. If anyone has ideas as to how we can remove some of these plateaus in the curve, I would be happy to chat :-).
 
 We next export this model to onnx to allow for a faster and more flexible runtime.
 

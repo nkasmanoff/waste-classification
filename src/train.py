@@ -454,13 +454,14 @@ def test(test_loader, model, criterion, num_classes, args):
         prefix='Test: ')
     if args.model_dir:
         model_path = os.path.expanduser(args.model_dir)
-        best_filename = os.path.join(model_path, best_filename)
-        best_checkpoint = torch.load(best_checkpoint)
+
+        best_filename = os.path.join(model_path, 'model_best.pth.tar')
+        best_checkpoint = torch.load(best_filename)
 
     else:
         return "Please make sure model dir is set! Exiting test."
 
-    model.load_state_dict(checkpoint['state_dict'])
+    model.load_state_dict(best_checkpoint['state_dict'])
 
     # switch to evaluate mode
     model.eval()
