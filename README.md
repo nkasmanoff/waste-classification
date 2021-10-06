@@ -5,11 +5,12 @@ Instantiates a classifier for real time object detection of waste, identifying w
 bin it should be in.
 
 This work depends on the UI tools created as part of the Jetson Hello AI World Tutorial
-found at https://github.com/dusty-nv/jetson-inference. This work assumes familarity with at least the first 3 episodes
+found at https://github.com/dusty-nv/jetson-inference. This work assumes familiarity with at least the first 3 episodes
 of that tutorial, as we will be taking advantage of that format for training to inference procedure.
 
+Additionally this work is a bit of an introduction to various MLOps frameworks (inspired by https://github.com/graviraja/MLOps-Basics) and as such introduces to the code Weights and Biases logging, and Hydra config files for improved hyper-parameter tuning.
 
-From a technical perspective, this work fine-tunes a resnet18 (initially trained on ImageNet), to categorize 7 unique
+From a technical perspective, this work fine-tunes a Resnet18 (initially trained on ImageNet), to categorize 7 unique
 classes of waste.
 
 
@@ -30,7 +31,6 @@ I will leave that to a future work, since having more classes at least to start 
 
 
 
-
 To reproduce this work, I am assuming you already have in your possession a Jetson
 flashed with the Jetpack OS, and a camera which you can attach to that device.
 
@@ -41,19 +41,17 @@ Once that is all configured, ssh into your device, and replicate the following s
 | :---: | --- | :---: | :---: |
 | 1 | Clone this repository | /home/<your-name> | git clone https://github.com/nkasmanoff/waste-classification.git  |
 | 2 | Clone the jetson-inference library | /home/<your-name> | git clone --recursive https://github.com/dusty-nv/jetson-inference |
-| 3 | Build the jetson-inference container, download appropriate models | /home/<your-name>/waste-classification | chmod +777 docker/setup.sh & docker/setup.sh
-| 4 | Install weights & biases to track model performance | - | pip install wandb
-| 5 | Head to the newly built waste-classification repo | /waste-classification | cd /waste-classification/
+| 3 | Build the jetson-inference container, download appropriate models + packages | /home/<your-name>/waste-classification | chmod +777 docker/setup.sh & docker/setup.sh
 
 With these actions complete, all that's left is to train your model.
 
-This an example command which leaves all hyper-parameters fixed, except the max # of epochs to train for.
+This an example command which leaves all hyper-parameters fixed, except instantiates two training runs of different learning rates to train for 100 epochs.
 
 ```bash
-$ python3 src/train.py --model-dir=models/waste-classification --epochs=250 /waste-classification/data/waste-classification
+$ python3 src/train.py --m lr=.1,.001 epochs=100
 ```
 
-There are many additional arguments within train.py, but I found that leaving these settings as is led to test set top1 accuracy of ~63% and top5 accuracy of ~98%  after letting this job run for roughly 24 hours. I tried several ways to speed this performance up, but none seemed to help. If anyone has ideas as to how we can remove some of these plateaus in the curve, I would be happy to chat :-).
+There are many additional arguments within '''train.py''', but I found that leaving these settings as is led to test set top1 accuracy of ~63% and top5 accuracy of ~98%  after letting this job run for roughly 24 hours. I tried several ways to speed this performance up, but none seemed to help. If anyone has ideas as to how we can remove some of these plateaus in the curve, I would be happy to chat :-).
 
 We next export this model to onnx to allow for a faster and more flexible runtime.
 
