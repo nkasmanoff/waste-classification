@@ -1,0 +1,4 @@
+wandb
+hydra-core
+omegaconf
+hydra_colorlog
