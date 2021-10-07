@@ -57,10 +57,11 @@ def main(cfg):
     #logger.info(f"Using the tokenizer: {cfg.model.tokenizer}")
     # instantiate run
 #    run = wandb.init(project="waste-classification") # team log
+    run = wandb.init(project="waste-classification",reinit=True) # team log
 
     # add cfg to wandb
-    wandb.config.update(cfg, allow_val_change=True)
-    run = wandb.init(project="waste-classification") # team log
+    wandb.config.update(cfg)
+    #run = wandb.init(project="waste-classification") # team log
 
 
     if cfg.seed is not None:
@@ -350,7 +351,7 @@ def validate(val_loader, model, criterion, num_classes, cfg):
     progress = ProgressMeter(
         len(val_loader),
         [batch_time, losses, top1, top5],
-        prefix='Test: ')
+        prefix='Validating: ')
 
     # switch to evaluate mode
     model.eval()
