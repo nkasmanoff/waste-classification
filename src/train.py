@@ -44,7 +44,11 @@ model_names = sorted(name for name in models.__dict__
 
 
 
-best_acc1 = 0
+
+
+
+
+best_acc1 = 0 # either 0 or from what's already saved, but not necesarily resumed!
 
 
 #
@@ -61,7 +65,15 @@ def main(cfg):
 
     # add cfg to wandb
     wandb.config.update(cfg)
-    #run = wandb.init(project="waste-classification") # team log
+
+
+    # check if we have a best accuracy to compare to. If so, add.
+    model_path = os.path.expanduser(cfg.model_dir)
+    best_filename = os.path.join(model_path, 'model_best.pth.tar')
+
+    if if os.path.isfile(best_filename):
+        best_checkpoint = torch.load(best_filename)
+        best_acc1 = best_checkpoint['best_acc1'])
 
 
     if cfg.seed is not None:
