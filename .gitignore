@@ -1,1 +1,5 @@
 **.DS_Store
+**.ckpt
+**.tar
+**models
+**multirun
