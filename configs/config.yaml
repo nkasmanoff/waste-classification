@@ -1,5 +1,5 @@
-data: data/waste-classification
-model_dir: models/waste-classification
+data: /waste-classification/data/waste-classification
+model_dir: /waste-classification/models/waste-classification
 arch: resnet18
 resolution: 224
 workers: 2
@@ -19,4 +19,5 @@ dist_url: tcp://224.66.41.62:23456
 dist_backend: nccl
 seed: null
 gpu: 0
-multiprocessing_distributed: true
+multiprocessing_distributed: false
+distributed: null

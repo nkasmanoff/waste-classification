@@ -13,6 +13,11 @@ import warnings
 import wandb # TODO - add loss, val acc.
 wandb.login()
 import hydra
+import logging
+
+logger = logging.getLogger(__name__)
+from omegaconf.omegaconf import OmegaConf
+
 
 import torch
 import torch.nn as nn
@@ -41,7 +46,7 @@ best_acc1 = 0
 #
 # initiate worker threads (if using distributed multi-GPU)
 #
-@hydra.main(config_path="./configs", config_name="config")
+@hydra.main(config_path="../configs", config_name="config")
 def main(cfg):
     logger.info(OmegaConf.to_yaml(cfg, resolve=True))
     #logger.info(f"Using the model: {cfg.model.name}")
@@ -50,7 +55,7 @@ def main(cfg):
     run = wandb.init(project="waste-classification") # team log
 
     # add cfg to wandb
-    wandb.config.update(cfg)
+    wandb.config.update(cfg, allow_val_change=True)
 
     if cfg.seed is not None:
         random.seed(cfg.seed)
