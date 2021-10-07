@@ -1,3 +1,7 @@
+defaults:
+  - override hydra/job_logging: colorlog
+  - override hydra/hydra_logging: colorlog
+
 data: /waste-classification/data/waste-classification
 model_dir: /waste-classification/models/waste-classification
 arch: resnet18
