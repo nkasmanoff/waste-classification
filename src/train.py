@@ -14,9 +14,14 @@ import wandb # TODO - add loss, val acc.
 wandb.login()
 import hydra
 import logging
+<<<<<<< HEAD
 
 logger = logging.getLogger(__name__)
 from omegaconf.omegaconf import OmegaConf
+=======
+from omegaconf.omegaconf import OmegaConf
+logger = logging.getLogger(__name__)
+>>>>>>> 761d27e52d2c5fd78ad574dcb7b51b08c78e725c
 
 
 import torch
@@ -31,7 +36,6 @@ import torch.utils.data.distributed
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
-
 from reshape import reshape_model
 
 model_names = sorted(name for name in models.__dict__
@@ -52,10 +56,14 @@ def main(cfg):
     #logger.info(f"Using the model: {cfg.model.name}")
     #logger.info(f"Using the tokenizer: {cfg.model.tokenizer}")
     # instantiate run
-    run = wandb.init(project="waste-classification") # team log
+#    run = wandb.init(project="waste-classification") # team log
 
     # add cfg to wandb
     wandb.config.update(cfg, allow_val_change=True)
+<<<<<<< HEAD
+=======
+    run = wandb.init(project="waste-classification") # team log
+>>>>>>> 761d27e52d2c5fd78ad574dcb7b51b08c78e725c
 
     if cfg.seed is not None:
         random.seed(cfg.seed)

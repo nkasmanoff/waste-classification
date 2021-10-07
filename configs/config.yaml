@@ -10,7 +10,7 @@ lr: 0.1
 momentum: 0.9
 weight_decay: 1e-4
 print_freq: 10
-resume: None
+resume: null
 evaluate: true
 pretrained: true
 world_size: -1
@@ -20,4 +20,7 @@ dist_backend: nccl
 seed: null
 gpu: 0
 multiprocessing_distributed: false
+<<<<<<< HEAD
 distributed: null
+=======
+>>>>>>> 761d27e52d2c5fd78ad574dcb7b51b08c78e725c
