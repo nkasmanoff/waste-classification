@@ -41,7 +41,11 @@ Once that is all configured, ssh into your device, and replicate the following s
 | :---: | --- | :---: | :---: |
 | 1 | Clone this repository | /home/<your-name> | git clone https://github.com/nkasmanoff/waste-classification.git  |
 | 2 | Clone the jetson-inference library | /home/<your-name> | git clone --recursive https://github.com/dusty-nv/jetson-inference |
-| 3 | Build the jetson-inference container, download appropriate models + packages | /home/<your-name>/waste-classification | chmod +777 docker/setup.sh & docker/setup.sh
+| 3 | Build the jetson-inference container, download appropriate models + packages | /home/<your-name>/waste-classification | chmod +777 docker/setup.sh & docker/
+| 4 | Head back to this repo, download appropriate models + packages | /home/jetson-inference | cd /waste-classification & pip install -r requirements.txt
+
+
+I would be eager to include step 4 as part of setup.sh, but currently unaware how to do so. Please submit a PR if you know how to do so!
 
 With these actions complete, all that's left is to train your model.
 
