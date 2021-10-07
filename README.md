@@ -52,7 +52,7 @@ With these actions complete, all that's left is to train your model.
 This an example command which leaves all hyper-parameters fixed, except instantiates two training runs of different learning rates to train for 100 epochs.
 
 ```bash
-$ python3 src/train.py --m lr=.1,.001 epochs=100
+$ python3 src/train.py --m lr=.001,0001 epochs=30
 ```
 
 There are many additional arguments within '''train.py''', but I found that leaving these settings as is led to test set top1 accuracy of ~63% and top5 accuracy of ~98%  after letting this job run for roughly 24 hours. I tried several ways to speed this performance up, but none seemed to help. If anyone has ideas as to how we can remove some of these plateaus in the curve, I would be happy to chat :-).

@@ -61,9 +61,8 @@ def main(cfg):
     #logger.info(f"Using the tokenizer: {cfg.model.tokenizer}")
     # instantiate run
 #    run = wandb.init(project="waste-classification") # team log
-    run = wandb.init(project="waste-classification",reinit=True) # team log
+    run = wandb.init(project="waste-classification",reinit=True) # allow re initialize for multi run setting.
 
-    # add cfg to wandb
     wandb.config.update(cfg)
 
 
