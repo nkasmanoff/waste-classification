@@ -70,9 +70,9 @@ def main(cfg):
     model_path = os.path.expanduser(cfg.model_dir)
     best_filename = os.path.join(model_path, 'model_best.pth.tar')
 
-    if if os.path.isfile(best_filename):
+    if os.path.isfile(best_filename):
         best_checkpoint = torch.load(best_filename)
-        best_acc1 = best_checkpoint['best_acc1'])
+        best_acc1 = best_checkpoint['best_acc1']
 
 
     if cfg.seed is not None:
